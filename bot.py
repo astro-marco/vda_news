@@ -13,7 +13,7 @@ FEEDS = [
     "https://www.valledaostaglocal.it/links/rss/argomenti/valledaostaglocalit/rss.xml",
     "https://aostanews24.it/feed/",
 ]
-UA = "Mozilla/5.0 (compatible; link-bot)"
+UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
 ROMA = ZoneInfo("Europe/Rome")
 
 def quando(e):
@@ -26,8 +26,9 @@ def quando(e):
 state = json.load(open("seen.json")) if os.path.exists("seen.json") else {"seen": [], "seeded": []}
 
 for url in FEEDS:
-    entries = feedparser.parse(url, agent=UA).entries
-    print(f"{url}: {len(entries)} voci")
+    d = feedparser.parse(url, agent=UA)
+    entries = d.entries
+    print(f"{len(entries)} voci | HTTP {d.get('status')} | {d.get('bozo_exception')} | {url}")
     if not entries:
         continue
     first = url not in state["seeded"]
