@@ -8,7 +8,7 @@ FEEDS = [
     "https://www.ansa.it/valledaosta/notizie/valledaosta_rss.xml",
     "https://aostasera.it/feed",
     "https://www.gazzettamatin.com/feed/",
-    "https://www.aostaoggi.it/rss",
+    "https://www.aostaoggi.it/rss1?format=feed&type=rss",
     "https://www.lavalleenotizie.it/feed/",
     "https://www.valledaostaglocal.it/links/rss/argomenti/valledaostaglocalit/rss.xml",
     "https://aostanews24.it/feed/",
