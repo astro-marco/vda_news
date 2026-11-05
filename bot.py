@@ -39,10 +39,14 @@ for url in FEEDS:
         if not first:
             when = quando(e)
             text = f"{e.title}\n\n" + (f"{when}\n" if when else "") + link
-            r = requests.post(f"https://api.telegram.org/bot{TOKEN}/sendMessage",
-                              data={"chat_id": CHAT, "text": text})
+            try:
+                r = requests.post(f"https://api.telegram.org/bot{TOKEN}/sendMessage",
+                                  data={"chat_id": CHAT, "text": text}, timeout=20)
+            except requests.RequestException:
+                print("errore di rete Telegram")
+                continue
             if not r.ok:
-                print("errore Telegram:", r.text)
+                print("errore Telegram:", r.status_code)
                 continue
             time.sleep(3)
         state["seen"].append(link)
