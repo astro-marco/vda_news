@@ -1,10 +1,14 @@
 name: check-new-links
 on:
   schedule:
-    - cron: "*/15 * * * *"
+    - cron: "19 * * * *"
   workflow_dispatch:
 permissions:
   contents: write
+concurrency:
+  # una run alla volta: evita messaggi doppi e conflitti con cron-job sul push di seen.json
+  group: check-new-links
+  cancel-in-progress: false
 jobs:
   run:
     runs-on: ubuntu-latest
