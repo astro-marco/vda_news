@@ -28,28 +28,41 @@ state = json.load(open("seen.json")) if os.path.exists("seen.json") else {"seen"
 for url in FEEDS:
     d = feedparser.parse(url, agent=UA)
     entries = d.entries
+    
+    if url == ansa.FEED:
+        entries = ansa.filtra(entries, state)
     print(f"{len(entries)} voci | HTTP {d.get('status')} | {d.get('bozo_exception')} | {url}")
+    
     if not entries:
         continue
+        
     first = url not in state["seeded"]
+    
     for e in reversed(entries):
         link = e.get("link")
+        
         if not link or link in state["seen"]:
             continue
+            
         if not first:
             when = quando(e)
             text = f"{e.title}\n\n" + (f"{when}\n" if when else "") + link
             try:
                 r = requests.post(f"https://api.telegram.org/bot{TOKEN}/sendMessage",
-                                  data={"chat_id": CHAT, "text": text}, timeout=20)
+                                  data={"chat_id": CHAT, "text": text,
+                                        # anteprima con immagine grande (Gazzetta Matin la mostrava piccola)
+                                        "link_preview_options": json.dumps({"url": link, "prefer_large_media": True})},
+                                  timeout=20)
             except requests.RequestException:
                 print("errore di rete Telegram")
                 continue
+                
             if not r.ok:
                 print("errore Telegram:", r.status_code)
                 continue
             time.sleep(3)
         state["seen"].append(link)
+        
     if first:
         state["seeded"].append(url)
 
