@@ -1,6 +1,7 @@
 import feedparser, requests, json, os, time
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
+import ansa
 
 TOKEN = os.environ["BOT_TOKEN"]
 CHAT = os.environ["CHANNEL"]
@@ -62,7 +63,8 @@ for url in FEEDS:
                 continue
             time.sleep(3)
         state["seen"].append(link)
-        
+        if url == ansa.FEED:
+            ansa.registra(state, e)
     if first:
         state["seeded"].append(url)
 
